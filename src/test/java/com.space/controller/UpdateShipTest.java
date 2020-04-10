@@ -1,47 +1,22 @@
 package com.space.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.space.config.MyWebAppInit;
-import com.space.config.WebConfig;
 import com.space.controller.utils.ShipInfoTest;
-import com.space.controller.utils.TestDataSourceConfig;
 import com.space.controller.utils.TestsHelper;
 import com.space.model.ShipType;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestDataSourceConfig.class, MyWebAppInit.class, WebConfig.class})
-@WebAppConfiguration
-@Sql(scripts = "classpath:test.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class UpdateShipTest {
-
-    private WebApplicationContext context;
-    private MockMvc mockMvc;
+public class UpdateShipTest extends AbstractTest {
 
     private TestsHelper testsHelper = new TestsHelper();
     private ObjectMapper mapper = new ObjectMapper();
-
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
 
     //test1
     @Test
@@ -126,8 +101,8 @@ public class UpdateShipTest {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
 
-        assertTrue("При запросе POST /rest/ships/{id} поле id не должно обновляться.", actual.id != 8);
-        assertTrue("При запросе POST /rest/ships/{id} с id в теле запроса, должны быть обновлены поля, кроме поля id", actual.equals(expected));
+        assertNotEquals("При запросе POST /rest/ships/{id} поле id не должно обновляться.", 8, actual.id);
+        assertEquals("При запросе POST /rest/ships/{id} с id в теле запроса, должны быть обновлены поля, кроме поля id", expected, actual);
     }
 
     //test8
@@ -144,7 +119,7 @@ public class UpdateShipTest {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
 
-        assertTrue("При запросе POST /rest/ships/{id} с пустым телом запроса, корабль не должен изменяться", actual.equals(expected));
+        assertEquals("При запросе POST /rest/ships/{id} с пустым телом запроса, корабль не должен изменяться", expected, actual);
     }
 
     //test9
@@ -162,7 +137,7 @@ public class UpdateShipTest {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
 
-        assertTrue("При запросе POST /rest/ships/{id} с rating в теле запроса, должны быть обновлены поля, кроме поля rating", actual.equals(expected));
+        assertEquals("При запросе POST /rest/ships/{id} с rating в теле запроса, должны быть обновлены поля, кроме поля rating", expected, actual);
     }
 
     //test10
@@ -187,7 +162,7 @@ public class UpdateShipTest {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
 
-        assertTrue("При запросе POST /rest/ships/{id} корабль должен обновляться и рейтинг пересчитываться", actual.equals(expected));
+        assertEquals("При запросе POST /rest/ships/{id} корабль должен обновляться и рейтинг пересчитываться", expected, actual);
     }
 
     //test11
@@ -211,12 +186,6 @@ public class UpdateShipTest {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
 
-        assertTrue("При запросе POST /rest/ships/{id} корабль должен обновляться и рейтинг пересчитываться", actual.equals(expected));
-    }
-
-
-    @Autowired
-    public void setContext(WebApplicationContext context) {
-        this.context = context;
+        assertEquals("При запросе POST /rest/ships/{id} корабль должен обновляться и рейтинг пересчитываться", expected, actual);
     }
 }

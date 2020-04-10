@@ -2,7 +2,7 @@ package com.space.controller.utils;
 
 import com.space.model.ShipType;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class ShipInfoTest {
@@ -35,20 +35,38 @@ public class ShipInfoTest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ShipInfoTest shipInfoTest = (ShipInfoTest) o;
-        return Objects.equals(id, shipInfoTest.id) &&
-                Objects.equals(name, shipInfoTest.name) &&
-                Objects.equals(planet, shipInfoTest.planet) &&
-                shipType == shipInfoTest.shipType &&
-                Objects.equals(new Date(prodDate).getYear(), new Date(prodDate).getYear()) &&
-                Objects.equals(isUsed, shipInfoTest.isUsed) &&
-                Objects.equals(speed, shipInfoTest.speed) &&
-                Objects.equals(crewSize, shipInfoTest.crewSize) &&
-                Objects.equals(rating, shipInfoTest.rating);
+        ShipInfoTest that = (ShipInfoTest) o;
+        Calendar calendarThis = Calendar.getInstance();
+        calendarThis.setTimeInMillis(prodDate);
+        int prodYearThis = calendarThis.get(Calendar.YEAR);
+        Calendar calendarThat = Calendar.getInstance();
+        calendarThat.setTimeInMillis(that.prodDate);
+        int prodYearThat = calendarThat.get(Calendar.YEAR);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(planet, that.planet) &&
+                shipType == that.shipType &&
+                Objects.equals(prodYearThis, prodYearThat) &&
+                Objects.equals(isUsed, that.isUsed) &&
+                Objects.equals(speed, that.speed) &&
+                Objects.equals(crewSize, that.crewSize) &&
+                Objects.equals(rating, that.rating);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, planet, shipType, prodDate, isUsed, speed, crewSize, rating);
+    }
+
+    @Override
+    public String toString() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(prodDate);
+        int prodYear = calendar.get(Calendar.YEAR);
+        return "ShipInfoTest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", prodYear=" + prodYear +
+                '}';
     }
 }

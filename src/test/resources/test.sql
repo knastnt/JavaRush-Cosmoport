@@ -1,5 +1,3 @@
-USE test;
-
 DROP TABLE IF EXISTS ship;
 
 CREATE TABLE ship
@@ -14,18 +12,16 @@ CREATE TABLE ship
     crewSize INT(4)      NULL,
     rating   DOUBLE      NULL,
     PRIMARY KEY (id)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+);
 
-insert into ship(name, planet, shipType, prodDate, isUsed, speed, crewSize, rating)
-values ('Orion III', 'Mars', 'MERCHANT', '2995-01-01', true, 0.82, 617, 1.31)
+INSERT INTO ship(name, planet, shipType, prodDate, isUsed, speed, crewSize, rating)
+VALUES ('Orion III', 'Mars', 'MERCHANT', '2995-01-01', true, 0.82, 617, 1.31)
      , ('Daedalus', 'Jupiter', 'MERCHANT', '3001-01-01', true, 0.94, 1619, 1.98)
      , ('Eagle Transporter', 'Earth', 'TRANSPORT', '2989-01-01', true, 0.79, 4527, 1.02)
      , ('F-302 Mongoose', 'Neptune', 'MILITARY', '3011-01-01', false, 0.24, 2170, 2.13)
      , ('Excalibur', 'Mercury', 'MILITARY', '3011-01-01', false, 0.64, 128, 5.69)
      , ('Explorer', 'Saturn', 'MERCHANT', '3007-01-01', false, 0.69, 4495, 4.25)
-     , ('Icarus I', 'Mercury', 'TRANSPORT', '2999-01-01', false, 0.07, 826, 0.27)
+     , ('Icarus I', 'Mercury', 'TRANSPORT', '2999-01-01', false, 0.08, 826, 0.27)
      , ('Hermes', 'Venus', 'MERCHANT', '3010-01-01', false, 0.05, 445, 0.40)
      , ('Odyssey', 'Neptune', 'TRANSPORT', '2988-01-01', false, 0.44, 1436, 1.10)
      , ('Orbit Jet', 'Venus', 'TRANSPORT', '3011-01-01', false, 0.55, 1931, 4.89)

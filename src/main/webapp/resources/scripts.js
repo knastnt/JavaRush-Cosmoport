@@ -377,7 +377,7 @@ function sendUpdate(root, id) {
     body.speed = document.getElementById("updateSpeed" + id).value;
     body.crewSize = document.getElementById("updateCrewSize" + id).value;
 
-    post(root + "rest/ships/" + id, JSON.stringify(body));
+    post(root + "/rest/ships/" + id, JSON.stringify(body));
     loadContent(root, "", 1);
 }
 
@@ -406,7 +406,7 @@ function processCreate(root) {
     body.speed = document.getElementById("inputSpeedNew").value;
     body.crewSize = document.getElementById("inputCrewSizeNew").value;
 
-    let response = post(root + "rest/ships/", JSON.stringify(body));
+    let response = post(root + "/rest/ships/", JSON.stringify(body));
     if (response.status === 200) {
         document.getElementById("inputNameNew").value = "";
         document.getElementById("inputPlanetNew").value = "";
@@ -425,7 +425,7 @@ function processCreate(root) {
 }
 
 function processDelete(root, id) {
-    Delete(root + "rest/ships/" + id);
+    Delete(root + "/rest/ships/" + id);
     processSearch(root, 1);
 }
 

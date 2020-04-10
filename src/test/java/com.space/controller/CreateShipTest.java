@@ -1,47 +1,26 @@
 package com.space.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.space.config.MyWebAppInit;
-import com.space.config.WebConfig;
 import com.space.controller.utils.ShipInfoTest;
-import com.space.controller.utils.TestDataSourceConfig;
 import com.space.controller.utils.TestsHelper;
 import com.space.model.ShipType;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestDataSourceConfig.class, MyWebAppInit.class, WebConfig.class})
-@WebAppConfiguration
-@Sql(scripts = "classpath:test.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class CreateShipTest {
-
-    private WebApplicationContext context;
-    private MockMvc mockMvc;
+public class CreateShipTest extends AbstractTest {
 
     private ObjectMapper mapper = new ObjectMapper();
     private ShipInfoTest expected;
 
     @Before
     public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-
+        super.setup();
         expected = new ShipInfoTest(41L, "123456789", "Earth", ShipType.MILITARY, 32998274577071L, true, 0.8, 14, 6.4);
     }
 
@@ -51,8 +30,7 @@ public class CreateShipTest {
         mockMvc.perform(post("/rest/ships/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .content("{}")
-        )
+                .content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -120,7 +98,7 @@ public class CreateShipTest {
 
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
-        assertTrue("Возвращается не правильный результат при запросе создания корабля без параметра isUsed.", actual.equals(expected));
+        assertEquals("Возвращается не правильный результат при запросе создания корабля без параметра isUsed.", expected, actual);
     }
 
     //test8
@@ -134,7 +112,7 @@ public class CreateShipTest {
 
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
-        assertTrue("Возвращается не правильный результат при запросе создания корабля с параметром isUsed.", actual.equals(expected));
+        assertEquals("Возвращается не правильный результат при запросе создания корабля с параметром isUsed.", expected, actual);
     }
 
     //test9
@@ -151,11 +129,6 @@ public class CreateShipTest {
 
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         ShipInfoTest actual = mapper.readValue(contentAsString, ShipInfoTest.class);
-        assertTrue("Возвращается не правильный результат при запросе создания корабля с параметром isUsed.", actual.equals(expected));
-    }
-
-    @Autowired
-    public void setContext(WebApplicationContext context) {
-        this.context = context;
+        assertEquals("Возвращается не правильный результат при запросе создания корабля с параметром isUsed.", expected, actual);
     }
 }
