@@ -42,6 +42,7 @@ public class Ship {
 
     public void setName(String name) {
         if(name == null || name == "") throw new IllegalArgumentException("Error while setting name. Can't be null and empty");
+        if(name.length() > 50) throw new IllegalArgumentException("Error while setting name. Can't be mere than 50 chars");
         this.name = name;
     }
 
@@ -51,6 +52,7 @@ public class Ship {
 
     public void setPlanet(String planet) {
         if(planet == null || planet == "") throw new IllegalArgumentException("Error while setting planet. Can't be null and empty");
+        if(planet.length() > 50) throw new IllegalArgumentException("Error while setting planet. Can't be mere than 50 chars");
         this.planet = planet;
     }
 
