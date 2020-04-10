@@ -1,9 +1,6 @@
 package com.space.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -18,13 +15,15 @@ public class Ship {
 
     String name; //Название корабля (до 50 знаков включительно)
     String planet; //Планета пребывания (до 50 знаков включительно)
+
+    @Enumerated(EnumType.STRING)
     ShipType shipType; //Тип корабля
     Date prodDate; //Дата выпуска. Диапазон значений года 2800..3019 включительно
     Boolean isUsed; //Использованный / новый
     Double speed; //Максимальная скорость корабля. Диапазон значений 0,01..0,99 включительно. Используй математическое округление до сотых.
     Integer crewSize; //Количество членов экипажа. Диапазон значений 1..9999 включительно.
 
-    @Transient
+    @Access(AccessType.PROPERTY)
     Double rating; //Рейтинг корабля. Используй математическое округление до сотых.
 
 
@@ -115,5 +114,9 @@ public class Ship {
         rating = (80.0 * speed * k)/(CURRENT_YEAR - shipProd.get(Calendar.YEAR) + 1.0);
         rating = Math.round(100.0 * rating) / 100.0;
         return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }
