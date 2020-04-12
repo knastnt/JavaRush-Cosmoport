@@ -16,6 +16,7 @@ public class ShipFilter {
     private Integer maxCrewSize;
     private Double minRating;
     private Double maxRating;
+
     private ShipOrder order;
     private Integer pageNumber;
     private Integer pageSize;

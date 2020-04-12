@@ -84,25 +84,65 @@ public class ShipService {
                 );
             }
 
+            //Минимальная скорость
+            if(filter.getMinSpeed() != null){
+                predicates.add(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get("speed"),
+                                filter.getMinSpeed()
+                        )
+                );
+            }
 
-//            // If designation is specified in filter, add equal where clause
-//            if (filter.getDesignation() != null) {
-//                predicates.add(criteriaBuilder.equal(root.get("designation"), filter.getDesignation()));
-//            }
-//
-//            // If firstName is specified in filter, add contains (lile)
-//            // filter to where clause with ignore case
-//            if (filter.getFirstName() != null) {
-//                pr.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")),
-//                        "%" + filter.getFirstName().toLowerCase() + "%"));
-//            }
-//
-//            // If lastName is specified in filter, add contains (lile)
-//            // filter to where clause with ignore case
-//            if (filter.getLastName() != null) {
-//                pr.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")),
-//                        "%" + filter.getLastName().toLowerCase() + "%"));
-//            }
+            //Максимальная скорость
+            if(filter.getMaxSpeed() != null){
+                predicates.add(
+                        criteriaBuilder.lessThanOrEqualTo(
+                                root.get("speed"),
+                                filter.getMaxSpeed()
+                        )
+                );
+            }
+
+            //Мин экипаж
+            if(filter.getMinCrewSize() != null){
+                predicates.add(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get("crewSize"),
+                                filter.getMinCrewSize()
+                        )
+                );
+            }
+
+            //Макс экипаж
+            if(filter.getMaxCrewSize() != null){
+                predicates.add(
+                        criteriaBuilder.lessThanOrEqualTo(
+                                root.get("crewSize"),
+                                filter.getMaxCrewSize()
+                        )
+                );
+            }
+
+            //Мин рейтинг
+            if(filter.getMinRating() != null){
+                predicates.add(
+                        criteriaBuilder.greaterThanOrEqualTo(
+                                root.get("rating"),
+                                filter.getMinRating()
+                        )
+                );
+            }
+
+            //Макс рейтинг
+            if(filter.getMaxRating() != null){
+                predicates.add(
+                        criteriaBuilder.lessThanOrEqualTo(
+                                root.get("rating"),
+                                filter.getMaxRating()
+                        )
+                );
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
