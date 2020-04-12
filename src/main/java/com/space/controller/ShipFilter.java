@@ -64,7 +64,7 @@ public class ShipFilter {
         return isUsed;
     }
 
-    public void setUsed(Boolean used) {
+    public void setIsUsed(Boolean used) {
         isUsed = used;
     }
 
