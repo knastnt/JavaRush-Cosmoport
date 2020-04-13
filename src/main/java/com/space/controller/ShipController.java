@@ -16,12 +16,11 @@ public class ShipController {
     private ShipRepository shipRepository;
     private ShipService shipService;
 
+    @Autowired
     public ShipController(ShipRepository shipRepository, ShipService shipService) {
         this.shipRepository = shipRepository;
         this.shipService = shipService;
     }
-
-    @Autowired
 
 
     @GetMapping("/ships")
@@ -30,7 +29,7 @@ public class ShipController {
     }
 
     @GetMapping("/ships/count")
-    public long getShipsCount(){
-        return shipRepository.count();
+    public long getShipsCount(ShipFilter shipFilter){
+        return shipService.retriveShipsCount(shipFilter);
     }
 }

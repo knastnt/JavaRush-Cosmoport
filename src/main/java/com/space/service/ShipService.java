@@ -6,6 +6,9 @@ import com.space.controller.ShipOrder;
 import com.space.model.Ship;
 import com.space.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -172,12 +175,44 @@ public class ShipService {
                     );
                 }
 
+                //Пейджинация
+                if (shipDisplayOptions.getPageNumber() != null) {
+                    Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+                }
+
                 return criteriaQuery.getRestriction();
             }
         };
     }
 
     public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions){
-        return shipRepository.findAll(filterSpecification(filter).and(displayOptionSpecification(shipDisplayOptions)));
+
+        Iterable<Ship> toReturn;
+
+
+        //Сортировка
+        Sort sort = Sort.unsorted();
+        if (shipDisplayOptions.getOrder() != null) {
+            sort = Sort.by(Sort.Direction.ASC, shipDisplayOptions.getOrder().getFieldName());
+        }
+
+
+        //Пэйджинация
+        Integer pageNum = shipDisplayOptions.getPageNumber();
+        Integer pageSize = shipDisplayOptions.getPageSize();
+        if (pageNum != null && pageSize != null) {
+            Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+            //Если не использовать .getContent(), то передается и количество и контент и информация о страницах. Но к сожалению фронтэнд такое не понимает
+            toReturn = shipRepository.findAll(filterSpecification(filter), pageable).getContent();
+        }else{
+            toReturn = shipRepository.findAll(filterSpecification(filter), sort);
+        }
+
+
+        return toReturn;
+    }
+
+    public long retriveShipsCount(ShipFilter filter){
+        return shipRepository.count(filterSpecification(filter));
     }
 }
