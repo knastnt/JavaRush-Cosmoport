@@ -187,9 +187,6 @@ public class ShipService {
 
     public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions){
 
-        Iterable<Ship> toReturn;
-
-
         //Сортировка
         Sort sort = Sort.unsorted();
         if (shipDisplayOptions.getOrder() != null) {
@@ -198,18 +195,14 @@ public class ShipService {
 
 
         //Пэйджинация
-        Integer pageNum = shipDisplayOptions.getPageNumber();
-        Integer pageSize = shipDisplayOptions.getPageSize();
-        if (pageNum != null && pageSize != null) {
-            Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-            //Если не использовать .getContent(), то передается и количество и контент и информация о страницах. Но к сожалению фронтэнд такое не понимает
-            toReturn = shipRepository.findAll(filterSpecification(filter), pageable).getContent();
-        }else{
-            toReturn = shipRepository.findAll(filterSpecification(filter), sort);
-        }
+        int pageNum = shipDisplayOptions.getPageNumber() != null ? shipDisplayOptions.getPageNumber() : 0;
+        int pageSize = shipDisplayOptions.getPageSize() != null ? shipDisplayOptions.getPageSize() : 3;
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
 
 
-        return toReturn;
+        // Если не использовать .getContent(), то передается и количество и контент и информация о страницах.
+        // Но к сожалению фронтэнд такое не понимает
+        return shipRepository.findAll(filterSpecification(filter), pageable).getContent();
     }
 
     public long retriveShipsCount(ShipFilter filter){
