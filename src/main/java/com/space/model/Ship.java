@@ -80,6 +80,7 @@ public class Ship {
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setProdDate(Date prodDate) {
         if(prodDate == null) throw new IllegalArgumentException("Error while setting prodDate. Can't be null");
+        if(prodDate.getTime() < 0) throw new IllegalArgumentException("Error while setting prodDate. Can't be < 0");
 
         Calendar shipProd = new GregorianCalendar();
         shipProd.setTime(prodDate);
