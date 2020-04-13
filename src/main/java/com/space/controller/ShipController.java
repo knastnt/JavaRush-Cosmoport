@@ -4,8 +4,10 @@ import com.space.model.Ship;
 import com.space.repository.ShipRepository;
 import com.space.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.Predicate;
 import java.lang.annotation.ElementType;
@@ -33,12 +35,22 @@ public class ShipController {
 
     @PostMapping("/ships")
     public Ship createShip(@RequestBody Ship ship){
-        Ship res = shipRepository.save(ship);
-        return res;
+        return shipRepository.save(ship);
     }
 
     @GetMapping("/ships/count")
     public long getShipsCount(ShipFilter shipFilter){
         return shipService.retriveShipsCount(shipFilter);
+    }
+
+    @GetMapping("/ships/{id}")
+    public Ship getShip(@PathVariable long id){
+        Ship ship = shipService.retriveShipById(id);
+        if (ship == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Ship with id=" + id + " not found"
+            );
+        }
+        return ship;
     }
 }
