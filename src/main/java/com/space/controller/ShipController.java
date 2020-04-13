@@ -25,11 +25,8 @@ public class ShipController {
 
 
     @GetMapping("/ships")
-    public @ResponseBody Iterable<Ship> getShips(ShipFilter shipFilter){
-//        return shipRepository.findAll((root, criteriaQuery, criteriaBuilder) -> {
-//            return criteriaBuilder.like(root.get("name"), "%" + name + "%");
-//        });
-        return shipService.retriveShips(shipFilter);
+    public @ResponseBody Iterable<Ship> getShips(ShipFilter shipFilter, ShipDisplayOptions shipDisplayOptions){
+        return shipService.retriveShips(shipFilter, shipDisplayOptions);
     }
 
     @GetMapping("/ships/count")
