@@ -34,6 +34,7 @@ public class ShipService {
     }
 
     private Specification<Ship> filterSpecification(ShipFilter filter){
+        if (filter == null) throw new IllegalArgumentException();
         return new Specification<Ship>() {
             @Override
             public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -165,6 +166,7 @@ public class ShipService {
     }
 
     public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions){
+        if (filter == null || shipDisplayOptions == null) throw new IllegalArgumentException();
 
         //Сортировка
         Sort sort = Sort.unsorted();
@@ -185,6 +187,7 @@ public class ShipService {
     }
 
     public long retriveShipsCount(ShipFilter filter){
+        if (filter == null) throw new IllegalArgumentException();
         return shipRepository.count(filterSpecification(filter));
     }
 
@@ -195,5 +198,13 @@ public class ShipService {
         }else{
             return null;
         }
+    }
+
+    public Ship updateShip(Ship ship, Ship shipParams) {
+        if (ship == null || shipParams == null) throw new IllegalArgumentException();
+
+        ship.merge(shipParams);
+
+        return shipRepository.save(ship);
     }
 }

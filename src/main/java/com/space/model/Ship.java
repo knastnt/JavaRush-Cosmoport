@@ -134,4 +134,16 @@ public class Ship {
     public void setRating(Double rating) {
         this.rating = rating;
     }
+
+    public void merge (Ship shipParams){
+        if (shipParams == null) throw new IllegalArgumentException();
+
+        if (shipParams.getName() != null) setName(shipParams.getName());
+        if (shipParams.getPlanet() != null) setPlanet(shipParams.getPlanet());
+        if (shipParams.getShipType() != null) setShipType(shipParams.getShipType());
+        if (shipParams.getProdDate() != null) setProdDate(shipParams.getProdDate());
+        if (shipParams.getUsed() != null) setUsed(shipParams.getUsed());
+        if (shipParams.getSpeed() != null) setSpeed(shipParams.getSpeed());
+        if (shipParams.getCrewSize() != null) setCrewSize(shipParams.getCrewSize());
+    }
 }
