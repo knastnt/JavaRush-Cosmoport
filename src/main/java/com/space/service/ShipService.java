@@ -160,31 +160,6 @@ public class ShipService {
         };
     }
 
-
-    private Specification<Ship> displayOptionSpecification(ShipDisplayOptions shipDisplayOptions){
-        return new Specification<Ship>() {
-            @Override
-            public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-
-                //Если задана сортировка
-                if(shipDisplayOptions.getOrder() != null){
-                    criteriaQuery.orderBy(
-                            criteriaBuilder.asc(
-                                    root.get(shipDisplayOptions.getOrder().getFieldName())
-                            )
-                    );
-                }
-
-                //Пейджинация
-                if (shipDisplayOptions.getPageNumber() != null) {
-                    Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
-                }
-
-                return criteriaQuery.getRestriction();
-            }
-        };
-    }
-
     public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions){
 
         //Сортировка
