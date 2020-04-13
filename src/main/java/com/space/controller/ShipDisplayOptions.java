@@ -1,8 +1,8 @@
 package com.space.controller;
 
-import com.space.model.ShipType;
+import org.springframework.stereotype.Component;
 
-@org.springframework.stereotype.Component
+@Component
 public class ShipDisplayOptions {
     private ShipOrder order;
     private Integer pageNumber;

@@ -4,9 +4,12 @@ import com.space.model.Ship;
 import com.space.repository.ShipRepository;
 import com.space.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +27,14 @@ public class ShipController {
 
 
     @GetMapping("/ships")
-    public @ResponseBody Iterable<Ship> getShips(ShipFilter shipFilter, ShipDisplayOptions shipDisplayOptions){
+    public Iterable<Ship> getShips(ShipFilter shipFilter, ShipDisplayOptions shipDisplayOptions){
         return shipService.retriveShips(shipFilter, shipDisplayOptions);
+    }
+
+    @PostMapping("/ships")
+    public Ship createShip(@RequestBody Ship ship){
+        Ship res = shipRepository.save(ship);
+        return res;
     }
 
     @GetMapping("/ships/count")
