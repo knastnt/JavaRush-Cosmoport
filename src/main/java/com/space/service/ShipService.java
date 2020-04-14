@@ -207,4 +207,10 @@ public class ShipService {
 
         return shipRepository.save(ship);
     }
+
+    public void deleteShip(Ship ship) {
+        if (ship == null) throw new IllegalArgumentException();
+
+        shipRepository.delete(ship);
+    }
 }

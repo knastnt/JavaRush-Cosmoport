@@ -59,4 +59,10 @@ public class ShipController {
         Ship ship = getShip(id);
         return shipService.updateShip(ship, shipParams);
     }
+
+    @DeleteMapping("/ships/{id}")
+    public void deleteShip(@PathVariable long id){
+        Ship ship = getShip(id);
+        shipService.deleteShip(ship);
+    }
 }
