@@ -39,6 +39,7 @@ public class ShipController {
 
     @GetMapping("/ships/{id}")
     public Ship getShip(@PathVariable long id) {
+        if (id < 1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         Ship ship = shipService.retriveShipById(id);
         if (ship == null) {
             throw new ResponseStatusException(
@@ -50,7 +51,6 @@ public class ShipController {
 
     @PostMapping("/ships/{id}")
     public Ship updateShip(@PathVariable long id, @RequestBody Ship shipParams) {
-        if (shipParams == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         Ship ship = getShip(id);
         return shipService.updateShip(ship, shipParams);
     }
