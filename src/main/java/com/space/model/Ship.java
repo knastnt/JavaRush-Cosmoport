@@ -21,7 +21,7 @@ public class Ship {
     @Enumerated(EnumType.STRING)
     private ShipType shipType; //Тип корабля
     private Date prodDate; //Дата выпуска. Диапазон значений года 2800..3019 включительно
-    private boolean isUsed; //Не может быть null! //Использованный / новый
+    private Boolean isUsed; //Не может быть null! //Использованный / новый
     private Double speed; //Максимальная скорость корабля. Диапазон значений 0,01..0,99 включительно. Используй математическое округление до сотых.
     private Integer crewSize; //Количество членов экипажа. Диапазон значений 1..9999 включительно.
 
@@ -96,12 +96,12 @@ public class Ship {
         this.prodDate = prodDate;
     }
 
-    public boolean getUsed() {
+    public Boolean getUsed() {
         return isUsed;
     }
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
-    public void setUsed(boolean used) {
+    public void setUsed(Boolean used) {
         isUsed = used;
     }
 
@@ -151,18 +151,19 @@ public class Ship {
         if (shipParams.getPlanet() != null) setPlanet(shipParams.getPlanet());
         if (shipParams.getShipType() != null) setShipType(shipParams.getShipType());
         if (shipParams.getProdDate() != null) setProdDate(shipParams.getProdDate());
-        setUsed(shipParams.getUsed()); //не может быть null
+        if (shipParams.getUsed() != null) setUsed(shipParams.getUsed());
         if (shipParams.getSpeed() != null) setSpeed(shipParams.getSpeed());
         if (shipParams.getCrewSize() != null) setCrewSize(shipParams.getCrewSize());
     }
 
     public boolean isAllFieldsFull() {
-        //исключая id (не проверяем) и isUsed (не может быть null)
+        //исключая id (не проверяем)
         return (
                 getName() != null &&
                 getPlanet() != null &&
                 getShipType() != null &&
                 getProdDate() != null &&
+                getUsed() != null &&
                 getSpeed() != null &&
                 getCrewSize() != null
                );

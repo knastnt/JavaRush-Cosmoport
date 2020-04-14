@@ -28,7 +28,15 @@ public class ShipController {
 
     @PostMapping("/ships")
     public Ship createShip(@RequestBody Ship ship) {
-        if (ship == null || !ship.isAllFieldsFull()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        if (ship == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        //Если не указан isUsed, то устанавливаем ему false
+        if (ship.getUsed() == null) ship.setUsed(false);
+
+        if (!ship.isAllFieldsFull())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
         return shipRepository.save(ship);
     }
 
