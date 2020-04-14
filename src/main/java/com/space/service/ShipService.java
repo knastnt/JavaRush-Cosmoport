@@ -10,10 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -33,130 +30,132 @@ public class ShipService {
         this.shipRepository = shipRepository;
     }
 
-    private Specification<Ship> filterSpecification(ShipFilter filter){
-        if (filter == null) throw new IllegalArgumentException();
+    private Specification<Ship> filterSpecification(ShipFilter filter) {
+        if (filter == null)
+            throw new IllegalArgumentException();
+
         return new Specification<Ship>() {
             @Override
             public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
 
                 //Если задано имя
-                if(filter.getName() != null){
+                if (filter.getName() != null) {
                     predicates.add(
-                            criteriaBuilder.like(
-                                    criteriaBuilder.lower(root.get("name")),    //Регистронезависимость
-                                    "%" + filter.getName().toLowerCase() + "%"
-                            )
+                        criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("name")),    //Регистронезависимость
+                            "%" + filter.getName().toLowerCase() + "%"
+                        )
                     );
                 }
 
                 //Если задана планета
-                if(filter.getPlanet() != null){
+                if (filter.getPlanet() != null) {
                     predicates.add(
-                            criteriaBuilder.like(
-                                    criteriaBuilder.lower(root.get("planet")),    //Регистронезависимость
-                                    "%" + filter.getPlanet().toLowerCase() + "%"
-                            )
+                        criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("planet")),    //Регистронезависимость
+                            "%" + filter.getPlanet().toLowerCase() + "%"
+                        )
                     );
                 }
 
                 //Тип корабля
-                if(filter.getShipType() != null){
+                if (filter.getShipType() != null) {
                     predicates.add(
-                            criteriaBuilder.equal(
-                                    root.get("shipType"),
-                                    filter.getShipType()
-                            )
+                        criteriaBuilder.equal(
+                            root.get("shipType"),
+                            filter.getShipType()
+                        )
                     );
                 }
 
                 //Год от
-                if(filter.getAfter() != null){
+                if (filter.getAfter() != null) {
                     predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    root.get("prodDate"),
-                                    new Date(filter.getAfter())
-                            )
+                        criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("prodDate"),
+                            new Date(filter.getAfter())
+                        )
                     );
                 }
 
                 //Год до
-                if(filter.getBefore() != null){
+                if (filter.getBefore() != null) {
                     predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    root.get("prodDate"),
-                                    new Date(filter.getBefore())
-                            )
+                        criteriaBuilder.lessThanOrEqualTo(
+                            root.get("prodDate"),
+                            new Date(filter.getBefore())
+                        )
                     );
                 }
 
                 //Бэушный
-                if(filter.getUsed() != null){
+                if (filter.getUsed() != null) {
                     predicates.add(
-                            criteriaBuilder.equal(
-                                    root.get("isUsed"),
-                                    filter.getUsed()
-                            )
+                        criteriaBuilder.equal(
+                            root.get("isUsed"),
+                            filter.getUsed()
+                        )
                     );
                 }
 
                 //Минимальная скорость
-                if(filter.getMinSpeed() != null){
+                if (filter.getMinSpeed() != null) {
                     predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    root.get("speed"),
-                                    filter.getMinSpeed()
-                            )
+                        criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("speed"),
+                            filter.getMinSpeed()
+                        )
                     );
                 }
 
                 //Максимальная скорость
-                if(filter.getMaxSpeed() != null){
+                if (filter.getMaxSpeed() != null) {
                     predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    root.get("speed"),
-                                    filter.getMaxSpeed()
-                            )
+                        criteriaBuilder.lessThanOrEqualTo(
+                            root.get("speed"),
+                            filter.getMaxSpeed()
+                        )
                     );
                 }
 
                 //Мин экипаж
-                if(filter.getMinCrewSize() != null){
+                if (filter.getMinCrewSize() != null) {
                     predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    root.get("crewSize"),
-                                    filter.getMinCrewSize()
-                            )
+                        criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("crewSize"),
+                            filter.getMinCrewSize()
+                        )
                     );
                 }
 
                 //Макс экипаж
-                if(filter.getMaxCrewSize() != null){
+                if (filter.getMaxCrewSize() != null) {
                     predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    root.get("crewSize"),
-                                    filter.getMaxCrewSize()
-                            )
+                        criteriaBuilder.lessThanOrEqualTo(
+                            root.get("crewSize"),
+                            filter.getMaxCrewSize()
+                        )
                     );
                 }
 
                 //Мин рейтинг
-                if(filter.getMinRating() != null){
+                if (filter.getMinRating() != null) {
                     predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    root.get("rating"),
-                                    filter.getMinRating()
-                            )
+                        criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("rating"),
+                            filter.getMinRating()
+                        )
                     );
                 }
 
                 //Макс рейтинг
-                if(filter.getMaxRating() != null){
+                if (filter.getMaxRating() != null) {
                     predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    root.get("rating"),
-                                    filter.getMaxRating()
-                            )
+                        criteriaBuilder.lessThanOrEqualTo(
+                            root.get("rating"),
+                            filter.getMaxRating()
+                        )
                     );
                 }
 
@@ -165,13 +164,16 @@ public class ShipService {
         };
     }
 
-    public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions){
-        if (filter == null || shipDisplayOptions == null) throw new IllegalArgumentException();
+    public Iterable<Ship> retriveShips(ShipFilter filter, ShipDisplayOptions shipDisplayOptions) {
+        if (filter == null || shipDisplayOptions == null)
+            throw new IllegalArgumentException();
 
         //Сортировка
-        Sort sort = Sort.unsorted();
+        Sort sort;
         if (shipDisplayOptions.getOrder() != null) {
             sort = Sort.by(Sort.Direction.ASC, shipDisplayOptions.getOrder().getFieldName());
+        } else {
+            sort = Sort.by(Sort.Direction.ASC, ShipOrder.ID.getFieldName()); //Сортировка по-умолчанию
         }
 
 
@@ -186,22 +188,23 @@ public class ShipService {
         return shipRepository.findAll(filterSpecification(filter), pageable).getContent();
     }
 
-    public long retriveShipsCount(ShipFilter filter){
+    public long retriveShipsCount(ShipFilter filter) {
         if (filter == null) throw new IllegalArgumentException();
         return shipRepository.count(filterSpecification(filter));
     }
 
     public Ship retriveShipById(long id) {
         Optional<Ship> ship = shipRepository.findById(id);
-        if (ship.isPresent()){
+        if (ship.isPresent()) {
             return ship.get();
-        }else{
+        } else {
             return null;
         }
     }
 
     public Ship updateShip(Ship ship, Ship shipParams) {
-        if (ship == null || shipParams == null) throw new IllegalArgumentException();
+        if (ship == null || shipParams == null)
+            throw new IllegalArgumentException();
 
         ship.merge(shipParams);
 
@@ -209,7 +212,8 @@ public class ShipService {
     }
 
     public void deleteShip(Ship ship) {
-        if (ship == null) throw new IllegalArgumentException();
+        if (ship == null)
+            throw new IllegalArgumentException();
 
         shipRepository.delete(ship);
     }

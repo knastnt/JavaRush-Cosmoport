@@ -9,7 +9,6 @@ public class ShipDisplayOptions {
     private Integer pageSize;
 
 
-
     public ShipOrder getOrder() {
         return order;
     }
