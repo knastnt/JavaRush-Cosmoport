@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.Predicate;
@@ -35,6 +36,7 @@ public class ShipController {
 
     @PostMapping("/ships")
     public Ship createShip(@RequestBody Ship ship){
+        if (ship == null || !ship.isAllFieldsFull()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         return shipRepository.save(ship);
     }
 
@@ -56,6 +58,7 @@ public class ShipController {
 
     @PostMapping("/ships/{id}")
     public Ship updateShip(@PathVariable long id, @RequestBody Ship shipParams){
+        if (shipParams == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         Ship ship = getShip(id);
         return shipService.updateShip(ship, shipParams);
     }

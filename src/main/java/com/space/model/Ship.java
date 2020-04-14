@@ -1,10 +1,6 @@
 package com.space.model;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -25,7 +21,7 @@ public class Ship {
     @Enumerated(EnumType.STRING)
     private ShipType shipType; //Тип корабля
     private Date prodDate; //Дата выпуска. Диапазон значений года 2800..3019 включительно
-    private Boolean isUsed; //Использованный / новый
+    private boolean isUsed; //Не может быть null! //Использованный / новый
     private Double speed; //Максимальная скорость корабля. Диапазон значений 0,01..0,99 включительно. Используй математическое округление до сотых.
     private Integer crewSize; //Количество членов экипажа. Диапазон значений 1..9999 включительно.
 
@@ -89,13 +85,12 @@ public class Ship {
         this.prodDate = prodDate;
     }
 
-    public Boolean getUsed() {
+    public boolean getUsed() {
         return isUsed;
     }
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
-    public void setUsed(Boolean used) {
-        if (used == null) used = false;
+    public void setUsed(boolean used) {
         isUsed = used;
     }
 
@@ -122,10 +117,10 @@ public class Ship {
     }
 
     public Double getRating() {
-        Double k = isUsed ? 0.5 : 1.0;
+        Double k = getUsed() ? 0.5 : 1.0;
         Calendar shipProd = new GregorianCalendar();
-        shipProd.setTime(prodDate);
-        rating = (80.0 * speed * k)/(CURRENT_YEAR - shipProd.get(Calendar.YEAR) + 1.0);
+        shipProd.setTime(getProdDate());
+        rating = (80.0 * getSpeed() * k) / (CURRENT_YEAR - shipProd.get(Calendar.YEAR) + 1.0);
         rating = Math.round(100.0 * rating) / 100.0;
         return rating;
     }
@@ -142,8 +137,20 @@ public class Ship {
         if (shipParams.getPlanet() != null) setPlanet(shipParams.getPlanet());
         if (shipParams.getShipType() != null) setShipType(shipParams.getShipType());
         if (shipParams.getProdDate() != null) setProdDate(shipParams.getProdDate());
-        if (shipParams.getUsed() != null) setUsed(shipParams.getUsed());
+        setUsed(shipParams.getUsed()); //не может быть null
         if (shipParams.getSpeed() != null) setSpeed(shipParams.getSpeed());
         if (shipParams.getCrewSize() != null) setCrewSize(shipParams.getCrewSize());
+    }
+
+    public boolean isAllFieldsFull(){
+        //исключая id (не проверяем) и isUsed (не может быть null)
+        return (
+                getName() != null &&
+                getPlanet() != null &&
+                getShipType() != null &&
+                getProdDate() != null &&
+                getSpeed() != null &&
+                getCrewSize() != null
+                );
     }
 }
