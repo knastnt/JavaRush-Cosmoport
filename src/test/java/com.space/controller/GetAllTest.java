@@ -76,8 +76,8 @@ public class GetAllTest extends AbstractTest {
     //test4
     @Test
     public void getAllWithFiltersShipTypeAfterBefore() throws Exception {
-        //after 00:00 01.01.3000    !!!  = 32503680000 а не 32503672800 !!!
-        //before 00:00 01.01.3011   !!!  = 32850748800 а не 32850741600 !!!  (https://www.unixtimestamp.com/index.php если сомневаешься, проверь timestamp у 1970-01-01)
+        //after 00:00 01.01.3000
+        //before 00:00 01.01.3011
         ResultActions resultActions = mockMvc.perform(get("/rest/ships?shipType=MILITARY&after=32503672800000&before=32850741600000")
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());

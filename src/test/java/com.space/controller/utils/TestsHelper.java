@@ -170,7 +170,6 @@ public class TestsHelper {
 
     public TestsHelper() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));  //Тут следует указать часовой пояс дла корректного парсинга дат ниже
 
         try {
             allShips.add(new ShipInfoTest(1L, "Orion III", "Mars", ShipType.MERCHANT, sdf.parse("2995-01-01").getTime(), true, 0.82, 617, 1.31));
