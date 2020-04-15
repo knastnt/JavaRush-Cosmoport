@@ -21,7 +21,7 @@ public class Ship {
     @Enumerated(EnumType.STRING)
     private ShipType shipType; //Тип корабля
     private Date prodDate; //Дата выпуска. Диапазон значений года 2800..3019 включительно
-    private boolean isUsed; //Не может быть null! //Использованный / новый
+    private Boolean isUsed; //Не может быть null! //Использованный / новый
     private Double speed; //Максимальная скорость корабля. Диапазон значений 0,01..0,99 включительно. Используй математическое округление до сотых.
     private Integer crewSize; //Количество членов экипажа. Диапазон значений 1..9999 включительно.
 
@@ -43,8 +43,11 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setName(String name) {
-        if(name == null || name == "") throw new IllegalArgumentException("Error while setting name. Can't be null and empty");
-        if(name.length() > 50) throw new IllegalArgumentException("Error while setting name. Can't be mere than 50 chars");
+        if (name == null || name == "")
+            throw new IllegalArgumentException("Error while setting name. Can't be null and empty");
+        if (name.length() > 50)
+            throw new IllegalArgumentException("Error while setting name. Can't be mere than 50 chars");
+
         this.name = name;
     }
 
@@ -54,8 +57,11 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setPlanet(String planet) {
-        if(planet == null || planet == "") throw new IllegalArgumentException("Error while setting planet. Can't be null and empty");
-        if(planet.length() > 50) throw new IllegalArgumentException("Error while setting planet. Can't be mere than 50 chars");
+        if (planet == null || planet == "")
+            throw new IllegalArgumentException("Error while setting planet. Can't be null and empty");
+        if (planet.length() > 50)
+            throw new IllegalArgumentException("Error while setting planet. Can't be mere than 50 chars");
+
         this.planet = planet;
     }
 
@@ -65,7 +71,8 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setShipType(ShipType shipType) {
-        if(shipType == null) throw new IllegalArgumentException("Error while setting shipType. Can't be null");
+        if (shipType == null)
+            throw new IllegalArgumentException("Error while setting shipType. Can't be null");
         this.shipType = shipType;
     }
 
@@ -75,22 +82,26 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setProdDate(Date prodDate) {
-        if(prodDate == null) throw new IllegalArgumentException("Error while setting prodDate. Can't be null");
-        if(prodDate.getTime() < 0) throw new IllegalArgumentException("Error while setting prodDate. Can't be < 0");
+        if (prodDate == null)
+            throw new IllegalArgumentException("Error while setting prodDate. Can't be null");
+        if (prodDate.getTime() < 0)
+            throw new IllegalArgumentException("Error while setting prodDate. Can't be < 0");
 
         Calendar shipProd = new GregorianCalendar();
         shipProd.setTime(prodDate);
-        if(shipProd.get(Calendar.YEAR) < 2800 || shipProd.get(Calendar.YEAR) > 3019) throw new IllegalArgumentException("Error while setting prodDate. Value must be 2800..3019");
+
+        if (shipProd.get(Calendar.YEAR) < 2800 || shipProd.get(Calendar.YEAR) > 3019)
+            throw new IllegalArgumentException("Error while setting prodDate. Value must be 2800..3019");
 
         this.prodDate = prodDate;
     }
 
-    public boolean getUsed() {
+    public Boolean getUsed() {
         return isUsed;
     }
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
-    public void setUsed(boolean used) {
+    public void setUsed(Boolean used) {
         isUsed = used;
     }
 
@@ -100,9 +111,11 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setSpeed(Double speed) {
-        if(speed == null) throw new IllegalArgumentException("Error while setting speed. Value must be 0.01...0.99");
-        Double newSpeed = Math.round(speed * 100.0)/100.0;
-        if(newSpeed < 0.01 || newSpeed > 0.99) throw new IllegalArgumentException("Error while setting speed. Value must be 0.01...0.99");
+        if (speed == null)
+            throw new IllegalArgumentException("Error while setting speed. Value must be 0.01...0.99");
+        Double newSpeed = Math.round(speed * 100.0) / 100.0;
+        if (newSpeed < 0.01 || newSpeed > 0.99)
+            throw new IllegalArgumentException("Error while setting speed. Value must be 0.01...0.99");
         this.speed = newSpeed;
     }
 
@@ -112,7 +125,8 @@ public class Ship {
 
     @JsonSetter //Почему-то только при наличие этой аннотации RequestBody использует поступ к методам, а не к полям
     public void setCrewSize(Integer crewSize) {
-        if(crewSize == null || crewSize < 1 || crewSize > 9999) throw new IllegalArgumentException("Error while setting crewSize. Value must be 1...9999");
+        if (crewSize == null || crewSize < 1 || crewSize > 9999)
+            throw new IllegalArgumentException("Error while setting crewSize. Value must be 1...9999");
         this.crewSize = crewSize;
     }
 
@@ -130,27 +144,28 @@ public class Ship {
         this.rating = rating;
     }
 
-    public void merge (Ship shipParams){
+    public void merge(Ship shipParams) {
         if (shipParams == null) throw new IllegalArgumentException();
 
         if (shipParams.getName() != null) setName(shipParams.getName());
         if (shipParams.getPlanet() != null) setPlanet(shipParams.getPlanet());
         if (shipParams.getShipType() != null) setShipType(shipParams.getShipType());
         if (shipParams.getProdDate() != null) setProdDate(shipParams.getProdDate());
-        setUsed(shipParams.getUsed()); //не может быть null
+        if (shipParams.getUsed() != null) setUsed(shipParams.getUsed());
         if (shipParams.getSpeed() != null) setSpeed(shipParams.getSpeed());
         if (shipParams.getCrewSize() != null) setCrewSize(shipParams.getCrewSize());
     }
 
-    public boolean isAllFieldsFull(){
-        //исключая id (не проверяем) и isUsed (не может быть null)
+    public boolean isAllFieldsFull() {
+        //исключая id (не проверяем)
         return (
                 getName() != null &&
                 getPlanet() != null &&
                 getShipType() != null &&
                 getProdDate() != null &&
+                getUsed() != null &&
                 getSpeed() != null &&
                 getCrewSize() != null
-                );
+               );
     }
 }
